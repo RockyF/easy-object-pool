@@ -27,9 +27,9 @@ recycleCat(cat)
 
 ## Api
 
+### Declare
 ```typescript
-function useObjectPool<T>(options: {
-	factoryMethod: (...params: any[]) => T;
+function useObjectPool<T>(factoryMethod: (...params: any[]) => T, options?: {
 	initializationMethod?: (instance: T, ...params: any[]) => void;
 	disposeMethod?: (instance: T, ...params: any[]) => void;
 	preInstantiationQuantity?: number;
@@ -41,9 +41,9 @@ function useObjectPool<T>(options: {
 
 | field | type | required | default | description |
 | :--- | :--- | :---: | :---: | :--- |
-| `factoryMethod` | (...params: any[]) => T | ✅ | | factory method to instantiate a instance |
-| `initializationMethod` | (instance: T, ...params: any[]) => void |  | | initialize a instance when get a instance |
-| `disposeMethod` | (instance: T, ...params: any[]) => void |  | | call if clean instances |
+| `factoryMethod` | see Declare | ✅ | | factory method to instantiate a instance |
+| `initializationMethod` | see Declare |  | | initialize a instance when get a instance |
+| `disposeMethod` | see Declare |  | | call if clean instances |
 | `preInstantiationQuantity` | `number` |  | `0` | instantiate some instances at ahead |
 | `limit` | `number` |  | `0` | set a limit quantity of pool |
 
@@ -53,6 +53,6 @@ function useObjectPool<T>(options: {
 
 | field | type | description |
 | :--- | :--- | :--- |
-| `getAInstance` | (...params: any[]) => T | get a instance |
-| `recycleInstance` | (instance: T &#124; T[]) => void | recycle a instance or instances |
-| `cleanAllInstance` | () => void | clean all instances |
+| `getAInstance` | see Declare | get a instance |
+| `recycleInstance` | see Declare | recycle a instance or instances |
+| `cleanAllInstance` | see Declare | clean all instances |

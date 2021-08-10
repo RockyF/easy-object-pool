@@ -6,16 +6,14 @@
 
 const recycleField = '__recycling'
 
-export function useObjectPool<T>(options: {
-	                                 factoryMethod: (...params) => T,
+export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 	                                 initializationMethod?: (instance: T, ...params) => void,
 	                                 disposeMethod?: (instance: T, ...params) => void,
 	                                 preInstantiationQuantity?: number,
 	                                 limit?: number,
-                                 }
+                                 } = {}
 ): [(...params) => T, (instance: T | T[]) => void, () => void] {
 	const {
-		factoryMethod,
 		initializationMethod,
 		disposeMethod,
 		preInstantiationQuantity = 0,
