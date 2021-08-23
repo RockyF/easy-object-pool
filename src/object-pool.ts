@@ -8,6 +8,7 @@ const recycleField = '__recycling'
 
 export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 	                                 initializationMethod?: (instance: T, ...params) => void,
+	                                 recycleMethod?: (instance: T) => void,
 	                                 disposeMethod?: (instance: T, ...params) => void,
 	                                 preInstantiationQuantity?: number,
 	                                 limit?: number,
@@ -15,6 +16,7 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 ): [(...params) => T, (instance: T | T[]) => void, () => void] {
 	const {
 		initializationMethod,
+		recycleMethod,
 		disposeMethod,
 		preInstantiationQuantity = 0,
 		limit = 0,
@@ -39,6 +41,8 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 			return
 		}
 
+		recycleMethod && recycleMethod(instance)
+
 		if (limit > 0 && pool.length >= limit) {
 			return
 		}
@@ -47,7 +51,8 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 		Object.defineProperty(instance, recycleField, {
 			get() {
 				return true
-			}
+			},
+			configurable: true,
 		})
 		pool.push(instance)
 	}
@@ -73,7 +78,8 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 		Object.defineProperty(instance, recycleField, {
 			get() {
 				return false
-			}
+			},
+			configurable: true,
 		})
 		return instance
 	}
