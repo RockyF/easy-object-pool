@@ -27,17 +27,17 @@ recycleCat(cat)
 
 ## Api
 
-### Declare
+### useObjectPool
 ```typescript
 function useObjectPool<T>(factoryMethod: (...params: any[]) => T, options?: {
 	initializationMethod?: (instance: T, ...params: any[]) => void;
 	disposeMethod?: (instance: T, ...params: any[]) => void;
 	preInstantiationQuantity?: number;
 	limit?: number;
-}): [(...params: any[]) => T, (instance: T | T[]) => void, () => void];
+}): [(...params: any[]) => T, (instance: T | T[]) => void, () => void]
 ```
 
-### Options interface
+#### Options interface
 
 | field | type | required | default | description |
 | :--- | :--- | :---: | :---: | :--- |
@@ -47,12 +47,17 @@ function useObjectPool<T>(factoryMethod: (...params: any[]) => T, options?: {
 | `preInstantiationQuantity` | `number` |  | `0` | instantiate some instances at ahead |
 | `limit` | `number` |  | `0` | set a limit quantity of pool |
 
-### Returns
+#### Returns
 
-`[getAInstance, recycleInstance, cleanAllInstance]`
+`[getAInstance, recycleInstance, clear]`
 
 | field | type | description |
 | :--- | :--- | :--- |
 | `getAInstance` | see Declare | get a instance |
 | `recycleInstance` | see Declare | recycle a instance or instances |
-| `cleanAllInstance` | see Declare | clean all instances |
+| `clear` | see Declare | clean all instances |
+
+### clearAll
+```typescript
+function clearAll()
+```

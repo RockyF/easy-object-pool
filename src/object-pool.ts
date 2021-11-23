@@ -4,7 +4,15 @@
  * ObjectPool
  */
 
-const recycleField = '__recycling'
+const RECYCLE_FIELD = '__recycling'
+
+const clears = []
+
+export function clearAll() {
+	for (let clear of clears) {
+		clear(0)
+	}
+}
 
 export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 	                                 initializationMethod?: (instance: T, ...params) => void,
@@ -36,7 +44,7 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 	}
 
 	function _recycle(instance: T) {
-		if (instance[recycleField]) {
+		if (instance[RECYCLE_FIELD]) {
 			console.warn('The instance has been recycled')
 			return
 		}
@@ -48,7 +56,7 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 		}
 
 		_disposeInstance(instance)
-		Object.defineProperty(instance, recycleField, {
+		Object.defineProperty(instance, RECYCLE_FIELD, {
 			get() {
 				return true
 			},
@@ -75,7 +83,7 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 		const args = params.concat()
 		args.unshift(instance)
 		initializationMethod && initializationMethod.apply(null, args)
-		Object.defineProperty(instance, recycleField, {
+		Object.defineProperty(instance, RECYCLE_FIELD, {
 			get() {
 				return false
 			},
@@ -99,13 +107,15 @@ export function useObjectPool<T>(factoryMethod: (...params) => T, options: {
 	}
 
 	/**
-	 * clean all instances in pool
+	 * clear all instances in pool
 	 */
-	function clean() {
+	function clear() {
 		while (pool.length > 0) {
 			_disposeInstance(pool.pop())
 		}
 	}
 
-	return [getInstance, recycleInstance, clean]
+	clears.push(clear)
+
+	return [getInstance, recycleInstance, clear]
 }
