@@ -10,7 +10,7 @@ const clears = []
 
 export function clearAll() {
 	for (let clear of clears) {
-		clear(0)
+		clear()
 	}
 }
 
